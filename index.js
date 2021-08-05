@@ -35,4 +35,3 @@ routes(app, (err) => {
     console.info(`App listening on port ${port}`);
   });
 });
-console.log('Nuevos cambios');
