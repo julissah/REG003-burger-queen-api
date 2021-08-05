@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(authMiddleware(secret));
 
+
 // Registrar rutas
 routes(app, (err) => {
   if (err) {
@@ -30,3 +31,4 @@ routes(app, (err) => {
     console.info(`App listening on port ${port}`);
   });
 });
+console.log('Nuevos cambios');
