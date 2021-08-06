@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 const express = require('express');
 const config = require('./config');
 const authMiddleware = require('./middleware/auth');
@@ -6,11 +5,21 @@ const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('./package.json');
 
-const { port, secret } = config;
+const { port, dbUrl, secret } = config;
 
 const app = express();
 
 app.listen(3000);
+
+const mongoose = require("mongoose");
+
+mongoose
+  .connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(console.log('ok conection'))
+  .catch(console.error);
 
 app.set('config', config);
 app.set('pkg', pkg);
