@@ -1,5 +1,6 @@
 const express = require('express');
 const config = require('./config');
+const mongoose = require('mongoose');
 const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
 const routes = require('./routes');
@@ -8,7 +9,16 @@ const pkg = require('./package.json');
 const { port, dbUrl, secret } = config;
 const app = express();
 
-// TODO: Conexión a la Base de Datos (MongoDB o MySQL)
+// conexion a base de datos
+mongoose
+  .connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  // eslint-disable-next-line no-console
+  .then(console.log('Base de datos conectada'))
+  .catch(console.error);
+
 
 app.set('config', config);
 app.set('pkg', pkg);
