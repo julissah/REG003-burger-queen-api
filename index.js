@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 const express = require('express');
 const config = require('./config');
 const mongoose = require('mongoose');
@@ -7,7 +6,7 @@ const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('./package.json');
 
-const { port, secret } = config;
+const { port, dbUrl, secret } = config;
 
 const app = express();
 
