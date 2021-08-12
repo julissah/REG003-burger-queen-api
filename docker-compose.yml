@@ -7,6 +7,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     networks:
       - private
+      - public
+    ports:
+      - 27018:27017
   node:
     image: node:12 # https://hub.docker.com/_/node/
     user: node
