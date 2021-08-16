@@ -20,20 +20,21 @@ mongoose
   .then(console.log('Base de datos conectada'))
   .catch(console.error);
 
-  const user = new User({ email: 'test@gmail.com', password: 'bqadmin' });
-  user.save().then(() => console.log('meow')).catch(console.error);
+  // const user = new User({ email: 'test@gmail.com', password: 'bqadmin' });
+  // user.save().then(() => console.log('meow')).catch(console.error);
   
 
 app.set('config', config);
 app.set('pkg', pkg);
 
+// middlewares
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(authMiddleware(secret));
 
 
-// Registrar rutas
+// Routes
 routes(app, (err) => {
   if (err) {
     throw err;

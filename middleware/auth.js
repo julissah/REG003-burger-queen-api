@@ -17,21 +17,34 @@ module.exports = (secret) => (req, resp, next) => {
     if (err) {
       return next(403);
     }
-
+  
     // TODO: Verificar identidad del usuario usando `decodeToken.uid`
+    console.log(User)
+    const userFind = User.findById(decodedToken.uid);
+
+    userFind
+      .then((doc) => {
+        if (!doc) {
+          return next(404);
+        }
+        req.authToken = decodedToken;
+
+        return next();
+      })
+      .catch(() => next(403));
   });
 };
 
 
 module.exports.isAuthenticated = (req) => (
   // TODO: decidir por la informacion del request si la usuaria esta autenticada
-  false
+  req.authToken || false
 );
 
 
 module.exports.isAdmin = (req) => (
   // TODO: decidir por la informacion del request si la usuaria es admin
-  false
+  req.authToken.roles.admin || false
 );
 
 
