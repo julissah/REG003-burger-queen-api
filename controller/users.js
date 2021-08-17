@@ -1,8 +1,4 @@
-// module.exports = {
-//   getUsers: (req, resp, next) => {
-//   },
-// };
-
+/* eslint-disable no-console */
 const User = require('../models/user');
 const {
   validateUser, isAValidEmail, isAWeakPassword,
@@ -12,7 +8,9 @@ const { isAdmin } = require('../middleware/auth');
 // GET '/users'
 const getUsers = async (req, res, next) => {
   try {
-    return res.status(200).json(users.docs);
+    console.log('este trae la data');
+    console.log(User);
+    return res.status(200).send('aca van los datos');
   } catch (err) {
     next(err);
   }
