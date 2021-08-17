@@ -6,29 +6,32 @@ const {
 const { isAdmin } = require('../middleware/auth');
 
 // GET '/users'
-const getUsers = async (req, res, next) => {
-  try {
-    console.log('este trae la data');
-    console.log(User);
-    return res.status(200).send('aca van los datos');
-  } catch (err) {
-    next(err);
-  }
+const getUsers = (req, res, next) => {
+  const userFind = User.find({});
+  userFind
+    .then((doc) => {
+      if (!doc) {
+        return next(404);
+      }
+      if (doc) {
+        console.info('muestra los datos');
+        console.log(doc);
+        return res.status(200).send(doc);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
-const getOneUser = async (req, res, next) => {
-  try {
-    const { uid } = req.params;
-    const value = validateUser(uid);
-    const user = await User.findOne(value).lean();
-    if (!user) {
-      return next(404);
-    }
 
-    if (req.authToken.uid === user._id.toString() || isAdmin(req)) return res.json(user);
-    return next(403);
-  } catch (err) {
-    return next(err);
-  }
+// GET 'users:id'
+const getOneUser = async (req, res, next) => {
+  const userid = req.params.uid;
+  User.findById(userid, (err, userfound) => {
+    if (err) return res.status(500).send({ message: 'ha ocurrido un error' });
+    if (!userfound) return res.status(404).send({ message: 'El usuario no ha sido encontrado' });
+    res.status(200).send(userfound);
+  });
 };
 
 // POST '/users'
