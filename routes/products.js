@@ -29,7 +29,7 @@ module.exports = (app, nextMain) => {
    */
   app.get('/products', requireAuth, (req, resp, next) => {
   });
-
+ 
   /**
    * @name GET /products/:productId
    * @description Obtiene los datos de un producto especifico
