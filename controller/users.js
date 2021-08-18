@@ -14,8 +14,6 @@ const getUsers = (req, res, next) => {
         return next(404);
       }
       if (doc) {
-        console.info('muestra los datos');
-        console.log(doc);
         return res.status(200).send(doc);
       }
     })
@@ -27,9 +25,9 @@ const getUsers = (req, res, next) => {
 // GET 'users:id'
 const getOneUser = async (req, res, next) => {
   const userid = req.params.uid;
-  User.findById(userid, (err, userfound) => {
-    if (err) return res.status(500).send({ message: 'ha ocurrido un error' });
-    if (!userfound) return res.status(404).send({ message: 'El usuario no ha sido encontrado' });
+  await User.findById(userid, (err, userfound) => {
+    if (err) return next(404);
+    // if (!userfound) return res.status(404).send({ message: 'El usuario no ha sido encontrado' });
     res.status(200).send(userfound);
   });
 };
@@ -37,14 +35,29 @@ const getOneUser = async (req, res, next) => {
 // POST '/users'
 
 const newUser = async (req, res, next) => {
+  console.log('esto esta llegando');
+  console.log(req.body);
+
+//   const createdUser = new User();
+//   createdUser.email = req.body.email;
+//   createdUser.password = req.body.password;
+//   createdUser.roles = req.body.roles;
+
+  //   await createdUser.save((err, userStored) => {
+  //     if (err) res.status(500).send({ message: 'ha ocurrido un error al guardar' });
+  //     console.log(userStored);
+  //     console.log(req.body);
+  //     res.status(200).send({ message: 'el usuario ha sido guardado' });
+  //   });
+  // };
+
   try {
     const { email, password } = req.body;
-
     if (!email || !password) {
       return next(400);
     }
 
-    if (isAWeakPassword(password) || !isAValidEmail(email)) return next(400);
+    // if (isAWeakPassword(password) || !isAValidEmail(email)) return next(400);
 
     const findUser = await User.findOne({ email: req.body.email });
 
@@ -56,8 +69,8 @@ const newUser = async (req, res, next) => {
 
     const newUser = new User(req.body);
     const userSaved = await newUser.save(newUser);
-    const user = await User.findOne({ _id: userSaved._id }).select('-password');
-    return res.status(200).json(user);
+    // const user = await User.findOne({ _id: userSaved._id }).select('-password');
+    return res.status(200).json(userSaved);
   } catch (err) {
     next(err);
   }

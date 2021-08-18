@@ -11,6 +11,7 @@ const {
 const {
   getUsers,
   getOneUser,
+  newUser,
 } = require('../controller/users');
 
 const initAdminUser = (app, next) => {
@@ -31,7 +32,6 @@ const initAdminUser = (app, next) => {
   userFind.then((doc) => {
     if (doc) {
       console.info('El usuario ya existe en la base de datos');
-      console.log(doc);
       return next(200);
     }
 
@@ -136,9 +136,9 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/users', requireAdmin, (req, resp, next) => {
-  });
-
+  // app.post('/users', requireAdmin, (req, resp, next) => {
+  // });
+  app.post('/users', newUser);
   /**
    * @name PUT /users
    * @description Modifica una usuaria
