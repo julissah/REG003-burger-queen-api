@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const {
   validateUser, isAValidEmail, isAWeakPassword,
@@ -38,19 +39,6 @@ const newUser = async (req, res, next) => {
   console.log('esto esta llegando');
   console.log(req.body);
 
-//   const createdUser = new User();
-//   createdUser.email = req.body.email;
-//   createdUser.password = req.body.password;
-//   createdUser.roles = req.body.roles;
-
-  //   await createdUser.save((err, userStored) => {
-  //     if (err) res.status(500).send({ message: 'ha ocurrido un error al guardar' });
-  //     console.log(userStored);
-  //     console.log(req.body);
-  //     res.status(200).send({ message: 'el usuario ha sido guardado' });
-  //   });
-  // };
-
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -68,6 +56,7 @@ const newUser = async (req, res, next) => {
     }
 
     const newUser = new User(req.body);
+    newUser.password = bcrypt.hashSync(req.body.password, 10);
     const userSaved = await newUser.save(newUser);
     // const user = await User.findOne({ _id: userSaved._id }).select('-password');
     return res.status(200).json(userSaved);
@@ -89,13 +78,15 @@ const updateUser = async (req, res, next) => {
 
     if (!user) return next(404);
 
-    if (req.authToken.uid !== user._id.toString() && !isAdmin(req)) return next(403);
-    if (!isAdmin(req) && body.roles) return next(403);
+    // if (req.authToken.uid !== user._id.toString() && !isAdmin(req)) return next(403);
+    // if (!isAdmin(req) && body.roles) return next(403);
     if (Object.entries(body).length === 0) return next(400);
 
     if (body.password && isAWeakPassword(body.password)) return next(400);
 
     if (body.email && !isAValidEmail(body.email)) return next(400);
+
+    if (body.password) body.password = bcrypt.hashSync(req.body.password, 10);
 
     const userUpdate = await User.findOneAndUpdate(
       value,
@@ -119,7 +110,7 @@ const deleteOneUser = async (req, res, next) => {
 
     if (!userDeleted) return next(404);
 
-    if (req.authToken.uid !== userDeleted._id.toString() && !isAdmin(req)) return next(403);
+    // if (req.authToken.uid !== userDeleted._id.toString() && !isAdmin(req)) return next(403);
 
     await User.findOneAndDelete(value);
 
