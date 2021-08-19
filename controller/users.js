@@ -4,7 +4,7 @@ const User = require('../models/user');
 const {
   validateUser, isAValidEmail, isAWeakPassword,
 } = require('../utils/utils');
-const { isAdmin } = require('../middleware/auth');
+// const { isAdmin } = require('../middleware/auth');
 
 // GET '/users'
 const getUsers = (req, res, next) => {
