@@ -1,4 +1,7 @@
+/* eslint-disable no-console */
 const bcrypt = require('bcrypt');
+
+const User = require('../models/user');
 
 const {
   requireAuth,
@@ -7,8 +10,9 @@ const {
 
 const {
   getUsers,
+  getOneUser,
+  newUser,
 } = require('../controller/users');
-
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
@@ -23,9 +27,25 @@ const initAdminUser = (app, next) => {
   };
 
   // TODO: crear usuaria admin
+  const userFind = User.findOne({ email: adminEmail });
+
+  userFind.then((doc) => {
+    if (doc) {
+      console.info('El usuario ya existe en la base de datos');
+      return next(200);
+    }
+
+    const newUser = new User(adminUser);
+    newUser.save();
+    console.info('El usuario ha sido creado');
+  })
+    .catch((err) => {
+      if (err !== 200) {
+        console.info('Ha ocurrido un error', err);
+      }
+    });
   next();
 };
-
 
 /*
  * Diagrama de flujo de una aplicación y petición en node - express :
@@ -76,8 +96,8 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si no es ni admin
    */
-  app.get('/users', requireAdmin, getUsers);
-
+  // app.get('/users', requireAdmin, getUsers);
+  app.get('/users', getUsers);
   /**
    * @name GET /users/:uid
    * @description Obtiene información de una usuaria
@@ -94,9 +114,9 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.get('/users/:uid', requireAuth, (req, resp) => {
-  });
-
+  // app.get('/users/:uid', requireAuth, (req, resp) => {
+  // });
+  app.get('/users/:uid', getOneUser);
   /**
    * @name POST /users
    * @description Crea una usuaria
@@ -116,9 +136,9 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/users', requireAdmin, (req, resp, next) => {
-  });
-
+  // app.post('/users', requireAdmin, (req, resp, next) => {
+  // });
+  app.post('/users', newUser);
   /**
    * @name PUT /users
    * @description Modifica una usuaria

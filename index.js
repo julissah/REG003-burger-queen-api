@@ -1,11 +1,11 @@
 const express = require('express');
-const config = require('./config');
 const mongoose = require('mongoose');
+const config = require('./config');
 const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('./package.json');
-const User = require('./models/user');
+
 const { port, dbUrl, secret } = config;
 
 const app = express();
@@ -20,20 +20,16 @@ mongoose
   .then(console.log('Base de datos conectada'))
   .catch(console.error);
 
-  const user = new User({ email: 'test@gmail.com', password: 'bqadmin' });
-  user.save().then(() => console.log('meow')).catch(console.error);
-  
-
 app.set('config', config);
 app.set('pkg', pkg);
 
+// middlewares
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(authMiddleware(secret));
+// app.use(authMiddleware(secret));
 
-
-// Registrar rutas
+// Routes
 routes(app, (err) => {
   if (err) {
     throw err;
