@@ -21,7 +21,6 @@ module.exports = (secret) => (req, resp, next) => {
     }
 
     // TODO: Verificar identidad del usuario usando `decodeToken.uid`
-    console.log(User);
     const userFind = User.findById(decodedToken.uid);
 
     userFind
