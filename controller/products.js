@@ -35,8 +35,7 @@ const newProduct = async (req, res, next) => {
     // eslint-disable-next-line no-console
     console.log(newProduct);
     const productSaved = await newProduct.save();
-    res.status(200).json(productSaved);
-    res.send('recibido');
+    return res.status(200).json(productSaved);
   } catch (err) {
     next(err);
   }
