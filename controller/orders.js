@@ -9,7 +9,6 @@ const getOrders = (req, res, next) => {
       if (!doc) {
         return next(404);
       }
-      console.log(doc);
       if (doc.length === 0) return res.send({ message: 'no existen ordenes para lista' });
       if (doc) {
         return res.status(200).send(doc);
@@ -22,7 +21,7 @@ const getOrders = (req, res, next) => {
 
 // Get '/orders/:orderId'
 const getOneOrder = async (req, res, next) => {
-  const orderid = req.params.uid;
+  const orderid = req.params.orderId;
   await Orders.findById(orderid, (err, orderfound) => {
     if (err) return next(404);
     // if (!userfound) return res.status(404).send({ message: 'El usuario no ha sido encontrado' });
@@ -32,9 +31,6 @@ const getOneOrder = async (req, res, next) => {
 
 // Post '/orders'
 const newOrder = async (req, res, next) => {
-  console.log('esto esta llegando');
-  console.log(req.body);
-
   try {
     const { folio, userId, client } = req.body;
     if (!folio) {
