@@ -8,7 +8,7 @@ const {
   getOneProducts,
   newProduct,
   deleteOneProduct,
-  // updateProduct,
+  updateProduct,
 } = require('../controller/products');
 
 /** @module products */
@@ -88,7 +88,6 @@ module.exports = (app, nextMain) => {
 
   app.post('/products', newProduct);
 
-
   /**
    * @name PUT /products
    * @description Modifica un producto
@@ -112,8 +111,10 @@ module.exports = (app, nextMain) => {
    * @code {403} si no es admin
    * @code {404} si el producto con `productId` indicado no existe
    */
-  app.put('/products/:productId', requireAdmin, (req, resp, next) => {
-  });
+  // app.put('/products/:productId', requireAdmin, (req, resp, next) => {
+  // });
+
+  app.put('/products/:productId', updateProduct);
 
   /**
    * @name DELETE /products

@@ -29,7 +29,7 @@ const getProducts = (req, res, next) => {
 
 // GET 'products:id'
 const getOneProducts = async (req, res, next) => {
-  const productId = req.params.productId;
+  const { productId } = req.params;
   await Product.findById(productId, (err, productfound) => {
     if (err) return next(500);
     if (!productfound) return next(404).send({ message: 'El producto no existe' });
@@ -62,29 +62,41 @@ const newProduct = async (req, res, next) => {
 };
 
 // PUT '/products/:productId'
-// const updateProduct = async (req, res, next) => {
-//   try {
-//     const { productId } = req.param;
-//     const { body } = req;
+const updateProduct = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const { body } = req;
 
-//     const product = await Product.findOne()
-//   }
-// }
+    if (!productId) return next(404);
+    if (Object.entries(body).length === 0) return next(400);
+
+    const productUpdate = await Product.findOneAndUpdate(
+      productId,
+      { $set: body },
+      { new: true, useFindAndModify: false },
+    );
+    return res.status(200).send(productUpdate);
+  } catch (err) {
+    next(404);
+  }
+};
 
 const deleteOneProduct = async (req, res, next) => {
-  const productId = req.params.productId;
+  const { productId } = req.params;
 
   Product.findById(productId, (err, product) => {
     if (err) return next(500);
-    product.remove(err => {
-      if (err) return next(500);
+    product.remove((err) => {
+      if (err) return next(500).send({ message: '' });
       res.status(200).send(product);
     });
   });
 };
+
 module.exports = {
   getProducts,
   getOneProducts,
   newProduct,
   deleteOneProduct,
+  updateProduct,
 };
