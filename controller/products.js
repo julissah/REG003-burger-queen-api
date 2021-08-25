@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const Product = require('../models/product');
 const { pagination } = require('../utils/utils');
 
@@ -13,13 +14,14 @@ const getProducts = (req, res, next) => {
   const productFind = Product.paginate({}, options);
   productFind
     .then((doc) => {
+      console.log(doc);
       if (!doc) {
         return next(404);
       }
       if (doc) {
         const links = pagination(doc, url, options.page, options.limit, doc.totalPages);
         res.links(links);
-        return res.status(200).send(doc);
+        return res.status(200).send(doc.docs);
       }
     })
     .catch((err) => {
@@ -31,7 +33,7 @@ const getProducts = (req, res, next) => {
 const getOneProducts = async (req, res, next) => {
   const { productId } = req.params;
   await Product.findById(productId, (err, productfound) => {
-    if (err) return next(500);
+    if (err) return next(404);
     if (!productfound) return next(404).send({ message: 'El producto no existe' });
     res.status(200).send(productfound);
   });
@@ -42,7 +44,7 @@ const getOneProducts = async (req, res, next) => {
 const newProduct = async (req, res, next) => {
   try {
     const { name, price } = req.body;
-    if (!name || !price) return next(404);
+    if (!name || !price) return next(400);
 
     const findProduct = await Product.findOne({ name: req.body.name });
     if (findProduct) {
@@ -67,7 +69,7 @@ const updateProduct = async (req, res, next) => {
     const { productId } = req.params;
     const { body } = req;
 
-    if (!productId) return next(404);
+    if (!productId) return next(400);
     if (Object.entries(body).length === 0) return next(400);
 
     const productUpdate = await Product.findOneAndUpdate(
@@ -85,7 +87,7 @@ const deleteOneProduct = async (req, res, next) => {
   const { productId } = req.params;
 
   Product.findById(productId, (err, product) => {
-    if (err) return next(500);
+    if (err) return next(404);
     product.remove((err) => {
       if (err) return next(500).send({ message: '' });
       res.status(200).send(product);

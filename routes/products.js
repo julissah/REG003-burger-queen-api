@@ -38,7 +38,7 @@ module.exports = (app, nextMain) => {
   // app.get('/products', requireAuth, (req, resp, next) => {
   // });
 
-  app.get('/products', getProducts);
+  app.get('/products', requireAuth, getProducts);
 
   /**
    * @name GET /products/:productId
@@ -59,7 +59,7 @@ module.exports = (app, nextMain) => {
    */
   // app.get('/products/:productId', requireAuth, (req, resp, next) => {
   // });
-  app.get('/products/:productId', getOneProducts);
+  app.get('/products/:productId', requireAuth, getOneProducts);
 
   /**
    * @name POST /products
@@ -86,7 +86,7 @@ module.exports = (app, nextMain) => {
   // app.post('/products', requireAdmin, (req, resp, next) => {
   // });
 
-  app.post('/products', newProduct);
+  app.post('/products', requireAdmin, newProduct);
 
   /**
    * @name PUT /products
@@ -114,7 +114,7 @@ module.exports = (app, nextMain) => {
   // app.put('/products/:productId', requireAdmin, (req, resp, next) => {
   // });
 
-  app.put('/products/:productId', updateProduct);
+  app.put('/products/:productId', requireAdmin, updateProduct);
 
   /**
    * @name DELETE /products
@@ -137,6 +137,6 @@ module.exports = (app, nextMain) => {
   // app.delete('/products/:productId', requireAdmin, (req, resp, next) => {
   // });
 
-  app.delete('/products/:productId', deleteOneProduct);
+  app.delete('/products/:productId', requireAdmin, deleteOneProduct);
   nextMain();
 };
