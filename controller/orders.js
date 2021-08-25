@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const Orders = require('../models/orders');
+const { isObjectId } = require('../utils/utils');
 
 // Get '/orders'
 const getOrders = (req, res, next) => {
@@ -9,7 +10,7 @@ const getOrders = (req, res, next) => {
       if (!doc) {
         return next(404);
       }
-      if (doc.length === 0) return res.send({ message: 'no existen ordenes para lista' });
+      if (doc.length === 0) return res.send({ message: 'no existen ordenes para listar' });
       if (doc) {
         return res.status(200).send(doc);
       }
@@ -92,9 +93,23 @@ const updateOrder = async (req, res, next) => {
   }
 };
 
+// Delete '/orders/:ordersId'
+const deleteOrder = async (req, res, next) => {
+  try {
+    const { orderId } = req.params;
+    if (!isObjectId(orderId)) return next(404);
+    const foundOrder = await Orders.findOne({ _id: orderId });
+    await Orders.findByIdAndDelete({ _id: orderId });
+    return res.status(200).send(foundOrder);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getOrders,
   newOrder,
   updateOrder,
   getOneOrder,
+  deleteOrder,
 };
