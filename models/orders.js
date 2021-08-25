@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { mongoose, Schema, model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const OrdersSchema = new Schema({
   folio: { type: Number, select: true },

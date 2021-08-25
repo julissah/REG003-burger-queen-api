@@ -36,9 +36,6 @@ const getOneUser = async (req, res, next) => {
 // POST '/users'
 
 const newUser = async (req, res, next) => {
-  console.log('esto esta llegando');
-  console.log(req.body);
-
   try {
     const { email, password } = req.body;
     if (!email || !password) {
