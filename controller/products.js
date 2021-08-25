@@ -27,22 +27,14 @@ const getProducts = (req, res, next) => {
     });
 };
 
-// GET '/products'
-const testProducts = async (req, res, next) => {
-  try {
-    const url = `${req.protocol}://${req.get('host') + req.path}`;
-    const options = {
-      page: parseInt(req.query.page, 10) || 1,
-      limit: parseInt(req.query.limit, 10) || 10,
-    };
-    const products = await Product.paginate({}, options);
-
-    const links = pagination(products, url, options.page, options.limit, products.totalPages);
-    res.links(links);
-    return res.status(200).json(products.docs);
-  } catch (err) {
-    next(err);
-  }
+// GET 'products:id'
+const getOneProducts = async (req, res, next) => {
+  const { productId } = req.params;
+  await Product.findById(productId, (err, productfound) => {
+    if (err) return next(500);
+    if (!productfound) return next(404).send({ message: 'El producto no existe' });
+    res.status(200).send(productfound);
+  });
 };
 
 // POST '/products'
@@ -55,7 +47,7 @@ const newProduct = async (req, res, next) => {
     const findProduct = await Product.findOne({ name: req.body.name });
     if (findProduct) {
       return res.status(403).json({
-        message: '(Error) El producto ya se encuentra registrado',
+        message: 'El producto ya se encuentra registrado',
       });
     }
 
@@ -69,7 +61,42 @@ const newProduct = async (req, res, next) => {
   }
 };
 
+// PUT '/products/:productId'
+const updateProduct = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const { body } = req;
+
+    if (!productId) return next(404);
+    if (Object.entries(body).length === 0) return next(400);
+
+    const productUpdate = await Product.findOneAndUpdate(
+      productId,
+      { $set: body },
+      { new: true, useFindAndModify: false },
+    );
+    return res.status(200).send(productUpdate);
+  } catch (err) {
+    next(404);
+  }
+};
+
+const deleteOneProduct = async (req, res, next) => {
+  const { productId } = req.params;
+
+  Product.findById(productId, (err, product) => {
+    if (err) return next(500);
+    product.remove((err) => {
+      if (err) return next(500).send({ message: '' });
+      res.status(200).send(product);
+    });
+  });
+};
+
 module.exports = {
   getProducts,
+  getOneProducts,
   newProduct,
+  deleteOneProduct,
+  updateProduct,
 };
