@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
   // __v: { type: Number, select: false },
-  id: { type: Number, select: false },
+  // _id: { type: Number, select: false },
   email: {
     type: String,
     required: true,

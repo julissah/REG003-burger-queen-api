@@ -30,7 +30,7 @@ module.exports = (app, nextMain) => {
     const userFound = User.findOne({ email });
     userFound.then((result) => {
       if (!result) {
-        return res.status(400).send({ message: 'User not found' });
+        return res.status(404).send({ message: 'User not found' });
       }
       bcrypt.compare(password, result.password, (err, data) => {
         if (err) console.info(err);

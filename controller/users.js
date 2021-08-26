@@ -42,7 +42,7 @@ const newUser = async (req, res, next) => {
       return next(400);
     }
 
-    // if (isAWeakPassword(password) || !isAValidEmail(email)) return next(400);
+    if (isAWeakPassword(password) || !isAValidEmail(email)) return next(400);
 
     const findUser = await User.findOne({ email: req.body.email });
 

@@ -166,7 +166,7 @@ module.exports = (app, next) => {
   // app.put('/users/:uid', requireAuth, (req, resp, next) => {
   // });
 
-  app.put('/users/:uid', updateUser);
+  app.put('/users/:uid', requireAuth, updateUser);
   /**
    * @name DELETE /users
    * @description Elimina una usuaria
