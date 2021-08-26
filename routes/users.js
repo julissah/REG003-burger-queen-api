@@ -185,7 +185,7 @@ module.exports = (app, next) => {
    */
   // app.delete('/users/:uid', requireAuth, (req, resp, next) => {
   // });
-  app.delete('/users/:uid', requireAdmin, deleteOneUser);
+  app.delete('/users/:uid', requireAuth, deleteOneUser);
 
   initAdminUser(app, next);
 };

@@ -21,7 +21,7 @@ const getProducts = (req, res, next) => {
       if (doc) {
         const links = pagination(doc, url, options.page, options.limit, doc.totalPages);
         res.links(links);
-        return res.status(200).send(doc.docs);
+        return res.status(200).send(doc);
       }
     })
     .catch((err) => {
