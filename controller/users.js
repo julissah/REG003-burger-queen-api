@@ -24,7 +24,8 @@ const getUsers = (req, res, next) => {
       if (doc) {
         const links = pagination(doc, url, options.page, options.limit, doc.totalPages);
         res.links(links);
-        return res.status(200).send(doc.docs);
+        console.log(doc);
+        return res.status(200).send(doc);
       }
     })
     .catch((err) => {

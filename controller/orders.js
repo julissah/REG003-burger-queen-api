@@ -4,8 +4,8 @@ const { isObjectId } = require('../utils/utils');
 
 // Get '/orders'
 const getOrders = (req, res, next) => {
-  const userFind = Orders.find({});
-  userFind
+  const orderFind = Orders.find({});
+  orderFind
     .then((doc) => {
       if (!doc) {
         return next(404);

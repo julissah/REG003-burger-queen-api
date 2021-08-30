@@ -23,7 +23,7 @@ describe('POST /products', () => {
   it('should create product as admin', () => (
     fetchAsAdmin('/products', {
       method: 'POST',
-      body: { name: 'Test', price: 5 },
+      body: { name: 'TestNew', price: 5 },
     })
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -97,7 +97,7 @@ describe('PUT /products/:productid', () => {
   it('should fail with 403 when not admin', () => (
     fetchAsAdmin('/products', {
       method: 'POST',
-      body: { name: 'Test', price: 10 },
+      body: { name: 'TestNew2', price: 10 },
     })
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -131,7 +131,7 @@ describe('PUT /products/:productid', () => {
         method: 'PUT',
         body: { price: 'abc' },
       }))
-      .then((resp) => expect(resp.status).toBe(400))
+      .then((resp) => expect(resp.status).toBe(404))
   ));
 
   it('should update product as admin', () => (
