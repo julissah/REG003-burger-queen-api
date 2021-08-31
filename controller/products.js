@@ -13,13 +13,14 @@ const getProducts = (req, res, next) => {
   const productFind = Product.paginate({}, options);
   productFind
     .then((doc) => {
+      console.log(doc);
       if (!doc) {
         return next(404);
       }
       if (doc) {
         const links = pagination(doc, url, options.page, options.limit, doc.totalPages);
         res.links(links);
-        return res.status(200).send(doc);
+        return res.status(200).send(doc.docs);
       }
     })
     .catch((err) => {
