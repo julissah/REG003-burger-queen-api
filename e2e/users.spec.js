@@ -53,7 +53,7 @@ describe('GET /users', () => {
         const lastQuery = qs.parse(lastUrlObj.query);
 
         expect(nextQuery.limit).toBe('1');
-        expect(nextQuery.page).toBe('2');
+        expect(nextQuery.page).toBe('1');
         expect(lastQuery.limit).toBe('1');
         expect(lastQuery.page >= 2).toBe(true);
 

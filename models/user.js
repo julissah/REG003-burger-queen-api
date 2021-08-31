@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
 const { mongoose, Schema, model } = require('mongoose');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const UserSchema = new Schema({
   // __v: { type: Number, select: false },
-  id: { type: Number, select: false },
+  // _id: { type: Number, select: false },
   email: {
     type: String,
     required: true,
@@ -59,5 +60,5 @@ const UserSchema = new Schema({
 //     throw new Error('Wrong password.');
 //   }
 // };
-
+UserSchema.plugin(mongoosePaginate);
 module.exports = model('User', UserSchema);

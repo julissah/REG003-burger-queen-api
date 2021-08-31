@@ -166,7 +166,7 @@ module.exports = (app, next) => {
   // app.put('/users/:uid', requireAuth, (req, resp, next) => {
   // });
 
-  app.put('/users/:uid', updateUser);
+  app.put('/users/:uid', requireAuth, updateUser);
   /**
    * @name DELETE /users
    * @description Elimina una usuaria
@@ -185,7 +185,7 @@ module.exports = (app, next) => {
    */
   // app.delete('/users/:uid', requireAuth, (req, resp, next) => {
   // });
-  app.delete('/users/:uid', requireAdmin, deleteOneUser);
+  app.delete('/users/:uid', requireAuth, deleteOneUser);
 
   initAdminUser(app, next);
 };

@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 const Product = require('../models/product');
 const { pagination } = require('../utils/utils');
+const { isAdmin } = require('../middleware/auth');
 
 // GET '/products'
 const getProducts = (req, res, next) => {
@@ -13,6 +15,7 @@ const getProducts = (req, res, next) => {
   const productFind = Product.paginate({}, options);
   productFind
     .then((doc) => {
+      console.log(doc);
       if (!doc) {
         return next(404);
       }
@@ -31,9 +34,9 @@ const getProducts = (req, res, next) => {
 const getOneProducts = async (req, res, next) => {
   const { productId } = req.params;
   await Product.findById(productId, (err, productfound) => {
-    if (err) return next(500);
+    if (err) return next(404);
     if (!productfound) return next(404).send({ message: 'El producto no existe' });
-    res.status(200).send(productfound);
+    res.status(200).json(productfound);
   });
 };
 
@@ -42,7 +45,7 @@ const getOneProducts = async (req, res, next) => {
 const newProduct = async (req, res, next) => {
   try {
     const { name, price } = req.body;
-    if (!name || !price) return next(404);
+    if (!name || !price) return next(400);
 
     const findProduct = await Product.findOne({ name: req.body.name });
     if (findProduct) {
@@ -63,16 +66,21 @@ const newProduct = async (req, res, next) => {
 
 // PUT '/products/:productId'
 const updateProduct = async (req, res, next) => {
+  const { productId } = req.params;
+  const { price } = req.body;
   try {
-    const { productId } = req.params;
-    const { body } = req;
+    if (!productId) return next(400);
+    console.log(req.body);
+    console.log(typeof price);
+    if (!isAdmin(req)) return next(403);
 
-    if (!productId) return next(404);
-    if (Object.entries(body).length === 0) return next(400);
+    // if (price && typeof price !== 'number') return next(400);
+
+    if (Object.entries(req.body).length === 0) return next(400);
 
     const productUpdate = await Product.findOneAndUpdate(
       productId,
-      { $set: body },
+      { $set: req.body },
       { new: true, useFindAndModify: false },
     );
     return res.status(200).send(productUpdate);
@@ -81,11 +89,12 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+// Delete '/products/:productId'
 const deleteOneProduct = async (req, res, next) => {
   const { productId } = req.params;
 
   Product.findById(productId, (err, product) => {
-    if (err) return next(500);
+    if (err) return next(404);
     product.remove((err) => {
       if (err) return next(500).send({ message: '' });
       res.status(200).send(product);
