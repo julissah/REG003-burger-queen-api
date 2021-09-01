@@ -45,7 +45,7 @@ describe('GET /products', () => {
         return resp.json();
       })
       .then((json) => {
-        expect(Array.isObject(json)).toBe(true);
+        expect(Array.isArray(json)).toBe(true);
         json.forEach((product) => {
           expect(typeof product._id).toBe('string');
           expect(typeof product.name).toBe('string');
