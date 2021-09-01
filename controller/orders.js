@@ -13,6 +13,7 @@ const getOrders = async (req, res, next) => {
     const url = `${req.protocol}://${req.get('host') + req.path}`;
     const links = pagination(listOrder, url, options.page, options.limit, listOrder.totalPages);
     res.links(links);
+    console.log(listOrder.docs);
     return res.status(200).json(listOrder.docs);
   } catch (err) {
     next(err);
@@ -21,12 +22,16 @@ const getOrders = async (req, res, next) => {
 
 // Get '/orders/:orderId'
 const getOneOrder = async (req, res, next) => {
-  const orderid = req.params.orderId;
-  await Orders.findById(orderid, (err, orderfound) => {
-    if (err) return next(404);
-    // if (!userfound) return res.status(404).send({ message: 'El usuario no ha sido encontrado' });
-    res.status(200).send(orderfound);
-  });
+  try {
+    if (!isObjectId(req.params.orderId)) return next(404);
+
+    const order = await Orders.findOne({ _id: req.params.orderId }).populate('products.product');
+
+    if (!order) return next(404);
+    res.status(200).json(order);
+  } catch (err) {
+    next(err);
+  }
 };
 
 // Post '/orders'
@@ -51,7 +56,8 @@ const newOrder = async (req, res, next) => {
     });
 
     const orderSaved = await newOrder.save(newOrder);
-    return res.status(200).json(orderSaved);
+    const orderPopulate = await Orders.findOne({ _id: orderSaved._id }).populate('products.product');
+    return res.status(200).json(orderPopulate);
   } catch (err) {
     next(err);
   }
@@ -70,15 +76,21 @@ const updateOrder = async (req, res, next) => {
 
     const statusOrder = [
       'pending',
+      'preparing',
       'canceled',
       'delivering',
       'delivered',
     ];
     if (status && !statusOrder.includes(status)) return next(400);
+    const now = Date();
+    const dateChange = now.toString();
 
     const orderUpdated = await Orders.findOneAndUpdate(
       { _id: orderId },
-      { $set: req.body },
+      {
+        $set: req.body,
+        dateProcessed: dateChange,
+      },
       { new: true, useFindAndModify: false },
     );
     return res.status(200).json(orderUpdated);
@@ -93,13 +105,11 @@ const deleteOrder = async (req, res, next) => {
     const { orderId } = req.params;
     if (!isObjectId(orderId)) return next(404);
 
-    // if (req.authToken.uid !== userDeleted._id.toString() && !isAdmin(req)) return next(403);
-
-    const foundOrder = await Orders.findOne({ _id: orderId });
-    await Orders.findByIdAndDelete({ _id: orderId });
-    return res.status(200).send(foundOrder);
+    // const foundOrder = await Orders.findOne({ _id: orderId });
+    const foundOrder = await Orders.findByIdAndDelete({ _id: orderId });
+    return res.status(200).json(foundOrder);
   } catch (err) {
-    next(err);
+    next(404);
   }
 };
 

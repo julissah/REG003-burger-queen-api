@@ -8,29 +8,20 @@ const { isAdmin } = require('../middleware/auth');
 const { pagination } = require('../utils/utils');
 
 // GET '/users'
-const getUsers = (req, res, next) => {
-  const url = `${req.protocol}://${req.get('host') + req.path}`;
-  const options = {
-    page: parseInt(req.query.page, 10) || 1,
-    limit: parseInt(req.query.limit, 10) || 2,
-  };
-
-  const userFind = User.find({});
-  userFind
-    .then((doc) => {
-      if (!doc) {
-        return next(404);
-      }
-      if (doc) {
-        const links = pagination(doc, url, options.page, options.limit, doc.totalPages);
-        res.links(links);
-        console.log(doc);
-        return res.status(200).send(doc);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const getUsers = async (req, res, next) => {
+  try {
+    const options = {
+      page: parseInt(req.query.page, 10) || 1,
+      limit: parseInt(req.query.limit, 10) || 10,
+    };
+    const users = await User.paginate({}, options);
+    const url = `${req.protocol}://${req.get('host') + req.path}`;
+    const links = pagination(users, url, options.page, options.limit, users.totalPages);
+    res.links(links);
+    return res.status(200).json(users.docs);
+  } catch (error) {
+    return next(500);
+  }
 };
 
 // GET 'users:id'

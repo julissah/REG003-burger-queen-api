@@ -18,29 +18,6 @@ const getProducts = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-  // // const productFind = Product.find({});
-  // // const { limit } = req.query;
-  // const url = `${req.protocol}://${req.get('host') + req.path}`;
-  // const options = {
-  //   page: parseInt(req.query.page, 10) || 1,
-  //   limit: parseInt(req.query.limit, 10) || 10,
-  // };
-  // const productFind = Product.paginate({}, options);
-  // productFind
-  //   .then((doc) => {
-  //     console.log(doc);
-  //     if (!doc) {
-  //       return next(404);
-  //     }
-  //     if (doc) {
-  //       const links = pagination(doc, url, options.page, options.limit, doc.totalPages);
-  //       res.links(links);
-  //       return res.status(200).send(doc);
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.error(err);
-  //   });
 };
 
 // GET 'products:id'
@@ -68,8 +45,6 @@ const newProduct = async (req, res, next) => {
     // }
 
     const newProduct = new Product(req.body);
-    // eslint-disable-next-line no-console
-    console.log(newProduct);
     const productSaved = await newProduct.save();
     return res.status(200).json(productSaved);
   } catch (err) {
