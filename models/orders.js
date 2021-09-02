@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const OrdersSchema = new Schema({
   folio: { type: Number, select: true },
@@ -16,7 +17,8 @@ const OrdersSchema = new Schema({
       type: Number,
     },
     product: {
-      type: Object,
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
     },
   }],
   status: {
@@ -29,8 +31,8 @@ const OrdersSchema = new Schema({
     default: Date.now,
   },
   dateProcessed: {
-    type: Date,
+    type: String,
   },
 });
-
+OrdersSchema.plugin(mongoosePaginate);
 module.exports = model('Orders', OrdersSchema);
