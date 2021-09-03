@@ -1,9 +1,9 @@
+/* eslint-disable max-len */
 const {
   fetch,
   fetchAsTestUser,
   fetchAsAdmin,
 } = process;
-
 
 describe('POST /orders', () => {
   it('should fail with 401 when no auth', () => (
@@ -41,7 +41,7 @@ describe('POST /orders', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5, client: 'client' }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -73,7 +73,7 @@ describe('POST /orders', () => {
       })
       .then(([product, user]) => fetchAsAdmin('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 25 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 25 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -89,7 +89,6 @@ describe('POST /orders', () => {
       })
   ));
 });
-
 
 describe('GET /orders', () => {
   it('should fail with 401 when no auth', () => (
@@ -114,11 +113,11 @@ describe('GET /orders', () => {
         Promise.all([
           fetchAsTestUser('/orders', {
             method: 'POST',
-            body: { products: [{ productId: product._id, qty: 50 }], userId: user._id },
+            body: { products: [{ product: product._id, qty: 50 }], userId: user._id, client: user._id },
           }),
           fetchAsAdmin('/orders', {
             method: 'POST',
-            body: { products: [{ productId: product._id, qty: 25 }], userId: user._id },
+            body: { products: [{ product: product._id, qty: 25 }], userId: user._id, client: user._id },
           }),
         ])
           .then((responses) => {
@@ -160,11 +159,11 @@ describe('GET /orders', () => {
         Promise.all([
           fetchAsTestUser('/orders', {
             method: 'POST',
-            body: { products: [{ productId: product._id, qty: 50 }], userId: user._id },
+            body: { products: [{ product: product._id, qty: 50 }], userId: user._id, client: user._id },
           }),
           fetchAsAdmin('/orders', {
             method: 'POST',
-            body: { products: [{ productId: product._id, qty: 25 }], userId: user._id },
+            body: { products: [{ product: product._id, qty: 25 }], userId: user._id, client: user._id },
           }),
         ])
           .then((responses) => {
@@ -189,7 +188,6 @@ describe('GET /orders', () => {
       })
   ));
 });
-
 
 describe('GET /orders/:orderId', () => {
   it('should fail with 401 when no auth', () => (
@@ -217,7 +215,7 @@ describe('GET /orders/:orderId', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -250,7 +248,7 @@ describe('GET /orders/:orderId', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: user._id },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -268,7 +266,6 @@ describe('GET /orders/:orderId', () => {
       })
   ));
 });
-
 
 describe('PUT /orders/:orderId', () => {
   it('should fail with 401 when no auth', () => (
@@ -299,7 +296,7 @@ describe('PUT /orders/:orderId', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -326,7 +323,7 @@ describe('PUT /orders/:orderId', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -354,7 +351,7 @@ describe('PUT /orders/:orderId', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -389,7 +386,7 @@ describe('PUT /orders/:orderId', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -424,7 +421,7 @@ describe('PUT /orders/:orderId', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -447,7 +444,6 @@ describe('PUT /orders/:orderId', () => {
       })
   ));
 });
-
 
 describe('DELETE /orders/:orderId', () => {
   it('should fail with 401 when no auth', () => (
@@ -475,7 +471,7 @@ describe('DELETE /orders/:orderId', () => {
       })
       .then(([product, user]) => fetchAsTestUser('/orders', {
         method: 'POST',
-        body: { products: [{ productId: product._id, qty: 5 }], userId: user._id },
+        body: { products: [{ product: product._id, qty: 5 }], userId: user._id, client: 'client' },
       }))
       .then((resp) => {
         expect(resp.status).toBe(200);

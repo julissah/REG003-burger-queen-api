@@ -1,22 +1,30 @@
-// module.exports = {
-//   getUsers: (req, resp, next) => {
-//   },
-// };
-
+/* eslint-disable no-console */
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const {
   validateUser, isAValidEmail, isAWeakPassword,
 } = require('../utils/utils');
 const { isAdmin } = require('../middleware/auth');
+const { pagination } = require('../utils/utils');
 
 // GET '/users'
 const getUsers = async (req, res, next) => {
   try {
+    const options = {
+      page: parseInt(req.query.page, 10) || 1,
+      limit: parseInt(req.query.limit, 10) || 10,
+    };
+    const users = await User.paginate({}, options);
+    const url = `${req.protocol}://${req.get('host') + req.path}`;
+    const links = pagination(users, url, options.page, options.limit, users.totalPages);
+    res.links(links);
     return res.status(200).json(users.docs);
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    return next(500);
   }
 };
+
+// GET 'users:id'
 const getOneUser = async (req, res, next) => {
   try {
     const { uid } = req.params;
@@ -38,7 +46,6 @@ const getOneUser = async (req, res, next) => {
 const newUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     if (!email || !password) {
       return next(400);
     }
@@ -54,6 +61,7 @@ const newUser = async (req, res, next) => {
     }
 
     const newUser = new User(req.body);
+    newUser.password = bcrypt.hashSync(req.body.password, 10);
     const userSaved = await newUser.save(newUser);
     const user = await User.findOne({ _id: userSaved._id }).select('-password');
     return res.status(200).json(user);
@@ -82,6 +90,8 @@ const updateUser = async (req, res, next) => {
     if (body.password && isAWeakPassword(body.password)) return next(400);
 
     if (body.email && !isAValidEmail(body.email)) return next(400);
+
+    if (body.password) body.password = bcrypt.hashSync(req.body.password, 10);
 
     const userUpdate = await User.findOneAndUpdate(
       value,
