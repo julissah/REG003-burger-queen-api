@@ -13,12 +13,6 @@ module.exports.isAValidEmail = (email) => {
   return (emailRegex.test(email));
 };
 module.exports.isAWeakPassword = (password) => ((password.length <= 3));
-// module.exports.isAWeakPassword = (password) => {
-//   if (password.length < 3) {
-//     return false;
-//   }
-//   return true;
-// };
 
 module.exports.isObjectId = (params) => {
   const checkForValidMongoDbID = new RegExp('^[0-9a-fA-F]{24}$');
