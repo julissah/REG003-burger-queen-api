@@ -13,7 +13,6 @@ const getOrders = async (req, res, next) => {
     const url = `${req.protocol}://${req.get('host') + req.path}`;
     const links = pagination(listOrder, url, options.page, options.limit, listOrder.totalPages);
     res.links(links);
-    console.log(listOrder.docs);
     return res.status(200).json(listOrder.docs);
   } catch (err) {
     next(err);
@@ -40,14 +39,6 @@ const newOrder = async (req, res, next) => {
   try {
     if (!client) return next(400);
     if (!products || products.lenght === 0) return next(400);
-
-    // const foundOrder = await Orders.findOne({ folio: req.body.folio });
-
-    // if (foundOrder) {
-    //   return res.status(403).json({
-    //     message: '(Error) La orden ya se encuentra registrada',
-    //   });
-    // }
 
     const newOrder = new Orders({
       userId: req.authToken.uid,
@@ -82,14 +73,13 @@ const updateOrder = async (req, res, next) => {
       'delivered',
     ];
     if (status && !statusOrder.includes(status)) return next(400);
-    const now = Date();
-    const dateChange = now.toString();
+    const now = Date().toString();
 
     const orderUpdated = await Orders.findOneAndUpdate(
       { _id: orderId },
       {
         $set: req.body,
-        dateProcessed: dateChange,
+        dateProcessed: now,
       },
       { new: true, useFindAndModify: false },
     );
