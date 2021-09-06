@@ -21,7 +21,7 @@ interfaz, que otro equipo de desarrolladoras está trabajando simultáneamente.
 
 ## 2. Resumen del proyecto
 
-<img src="./Images/apiImg.jpg" >
+<img src="./images/apiImg.jpg" >
 
 Con una API en este caso nos referimos a un _servidor web_, que es
 básicamente un programa que _escucha_ en un puerto de red, a través del cual
@@ -99,4 +99,6 @@ npm start 8888
 ## 5. Despliegue (Deployment)
 
 El despliegue se realizó con Heroku visible en el siguiente enlace: https://apiburgerqueenreg.herokuapp.com/
+
+Base de datos utilizada, MongoDB
 
