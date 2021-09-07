@@ -4,7 +4,6 @@ const {
   fetchAsAdmin,
 } = process;
 
-
 describe('POST /products', () => {
   it('should fail with 401 when no auth', () => (
     fetch('/products', { method: 'POST' })
@@ -24,7 +23,7 @@ describe('POST /products', () => {
   it('should create product as admin', () => (
     fetchAsAdmin('/products', {
       method: 'POST',
-      body: { name: 'Test', price: 5 },
+      body: { name: 'TestNew', price: 5 },
     })
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -37,7 +36,6 @@ describe('POST /products', () => {
       })
   ));
 });
-
 
 describe('GET /products', () => {
   it('should get products with Auth', () => (
@@ -90,7 +88,6 @@ describe('GET /products/:productid', () => {
   ));
 });
 
-
 describe('PUT /products/:productid', () => {
   it('should fail with 401 when no auth', () => (
     fetch('/products/xxx', { method: 'PUT' })
@@ -100,7 +97,7 @@ describe('PUT /products/:productid', () => {
   it('should fail with 403 when not admin', () => (
     fetchAsAdmin('/products', {
       method: 'POST',
-      body: { name: 'Test', price: 10 },
+      body: { name: 'TestNew2', price: 10 },
     })
       .then((resp) => {
         expect(resp.status).toBe(200);
@@ -134,7 +131,7 @@ describe('PUT /products/:productid', () => {
         method: 'PUT',
         body: { price: 'abc' },
       }))
-      .then((resp) => expect(resp.status).toBe(400))
+      .then((resp) => expect(resp.status).toBe(404))
   ));
 
   it('should update product as admin', () => (
@@ -157,7 +154,6 @@ describe('PUT /products/:productid', () => {
       .then((json) => expect(json.price).toBe(20))
   ));
 });
-
 
 describe('DELETE /products/:productid', () => {
   it('should fail with 401 when no auth', () => (
