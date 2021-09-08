@@ -67,6 +67,6 @@ npm start 8888
 
 ## 5. Despliegue (Deployment)
 
-El despliegue se realizó con Heroku visible en el siguiente enlace: `https://burger-queen-api-reg.herokuapp.com/`
+El despliegue se realizó con Heroku visible en el siguiente enlace: https://burger-queen-api-reg.herokuapp.com/
 
 Base de datos utilizada, `MongoDB`.
