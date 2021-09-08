@@ -44,40 +44,9 @@ implementar la aplicación, qué parámetros esperan, qué deben responder, etc.
 
 ## 3. Endpoints
 
-
-#### 3.1 `/`
-
-* `GET /`
-
-#### 3.2 `/auth`
-
-* `POST /auth`
-
-#### 3.3 `/users`
-
-* `GET /users`
-* `GET /users/:uid`
-* `POST /users`
-* `PUT /users/:uid`
-* `DELETE /users/:uid`
-
-#### 3.4 `/products`
-
-* `GET /products`
-* `GET /products/:productid`
-* `POST /products`
-* `PUT /products/:productid`
-* `DELETE /products/:productid`
-
-#### 3.5 `/orders`
-
-* `GET /orders`
-* `GET /orders/:orderId`
-* `POST /orders`
-* `PUT /orders/:orderId`
-* `DELETE /orders/:orderId`
-
 La aplicación incluye middlewares de autenticación y control de errores. Requiere un usuario administrador y autenticación para acceder a las rutas. 
+
+<img src="./images/postman.png" >
 
 ## 4. CLI
 
@@ -98,7 +67,6 @@ npm start 8888
 
 ## 5. Despliegue (Deployment)
 
-El despliegue se realizó con Heroku visible en el siguiente enlace: https://apiburgerqueenreg.herokuapp.com/
+El despliegue se realizó con Heroku visible en el siguiente enlace: `https://burger-queen-api-reg.herokuapp.com/`
 
-Base de datos utilizada, MongoDB
-
+Base de datos utilizada, `MongoDB`.
